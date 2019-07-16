@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Posts
+{% endblock %}
+
+{% block content_title %}
+    Hello blueprint
+
+{% endblock %}
+
+
+{% block content %}
+    <br>
+    {% for post in posts %}
+   <a href="{{ url_for('posts.post_detail', slug=post.slug) }}"><p>{{ post.title }}</p></a>
+    {% endfor %}
+
+{% endblock %}
