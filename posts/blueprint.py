@@ -13,12 +13,21 @@ posts = Blueprint('posts', __name__, template_folder='templates')
 @posts.route('/')
 def posts_list():
     search = request.args.get('search')
+    page = request.args.get('page')
+
+    if page and page.isdigit():
+        page = int(page)
+    else:
+        page = 1
 
     if search:
-        posts = Post.query.filter(Post.title.contains(search) | Post.body.contains(search)).all()
+        posts = Post.query.filter(Post.title.contains(search) | Post.body.contains(search))
     else:
         posts = Post.query.order_by(Post.created.desc())
-    return render_template('posts/posts_list.html', posts=posts)
+
+    pages = posts.paginate(page=page, per_page=3)
+
+    return render_template('posts/posts_list.html', posts=posts, pages=pages)
 
 
 @posts.route('/create', methods=['POST', 'GET', ])

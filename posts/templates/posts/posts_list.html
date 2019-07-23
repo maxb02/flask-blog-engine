@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Posts
+    Posts list
 {% endblock %}
 
 {% block content_title %}
@@ -11,12 +11,32 @@
 
 
 {% block content %}
-    <br>
-    {% for post in posts %}
-   <a href="{{ url_for('posts.post_detail', slug=post.slug) }}"><p>{{ post.title }}</p></a>
-        {% for tag in post.tags %}
-        <span class="badge badge-secondary">{{ tag.name }}</span>
-            {% endfor %}
+
+
+    {% for post in pages.items %}
+
+        {% include 'posts/includes/post_card_template.html' %}
+
     {% endfor %}
+    <div class="mt-5">
+        <nav aria-label="pagination mt-5">
+            <ul class="pagination">
+                <li class="page-item {% if not pages.has_prev %} disabled {% endif %} ">
+                    <a class="page-link" href="./?page={{ pages.prev_num }}" tabindex="-1"
+                       aria-disabled="true">Previous</a>
+                </li>
+                {% for page in pages.iter_pages() %}
+                    <li class="page-item {% if page == pages.page %} active {% endif %}"><a class="page-link"
+                                                                                            href="./?page={{ page }}">{{ page }}</a>
+                    </li>
+                {% endfor %}
+
+
+                <li class="page-item {% if not pages.has_next %} disabled {% endif %}">
+                    <a class="page-link" href="./?page={{ pages.next_num }}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 
 {% endblock %}
